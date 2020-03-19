@@ -48,6 +48,8 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
+const MODULE_NAME = appPackageJson.name;
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function(webpackEnv) {
@@ -164,14 +166,14 @@ module.exports = function(webpackEnv) {
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
       filename: isEnvProduction
-        ? 'module-a/static/js/[name].[contenthash:8].js'
-        : isEnvDevelopment && 'module-a/static/js/bundle.js',
+        ? `${MODULE_NAME}/static/js/[name].[contenthash:8].js`
+        : isEnvDevelopment && `${MODULE_NAME}/static/js/bundle.js`,
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
-        ? 'module-a/static/js/[name].[contenthash:8].chunk.js'
-        : isEnvDevelopment && 'module-a/static/js/[name].chunk.js',
+        ? `${MODULE_NAME}/static/js/[name].[contenthash:8].chunk.js`
+        : isEnvDevelopment && `${MODULE_NAME}/static/js/[name].chunk.js`,
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
@@ -190,8 +192,8 @@ module.exports = function(webpackEnv) {
       // this defaults to 'window', but by setting it to 'this' then
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
-      hotUpdateChunkFilename: 'module-a/[id].[hash].hot-update.js',
-      hotUpdateMainFilename: 'module-a/[hash].hot-update.json'
+      hotUpdateChunkFilename: `${MODULE_NAME}/[id].[hash].hot-update.js`,
+      hotUpdateMainFilename: `${MODULE_NAME}/[hash].hot-update.json`
     },
     optimization: {
       minimize: isEnvProduction,
@@ -356,7 +358,7 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('url-loader'),
               options: {
                 limit: imageInlineSizeLimit,
-                name: 'module-a/static/media/[name].[hash:8].[ext]',
+                name: `${MODULE_NAME}/static/media/[name].[hash:8].[ext]`,
               },
             },
             // Process application JS with Babel.
@@ -498,7 +500,7 @@ module.exports = function(webpackEnv) {
               // by webpacks internal loaders.
               exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               options: {
-                name: 'module-a/static/media/[name].[hash:8].[ext]',
+                name: `${MODULE_NAME}/static/media/[name].[hash:8].[ext]`,
               },
             },
             // ** STOP ** Are you adding a new loader?
@@ -536,10 +538,10 @@ module.exports = function(webpackEnv) {
       ),
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, 'manifest-template.html'),
-        filename: 'module-a/static/html/module-manifest.html',
+        filename: `${MODULE_NAME}/static/html/module-manifest.html`,
         inject: false,
         hash: true,
-        moduleName: 'module-a',
+        moduleName: MODULE_NAME,
       }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
@@ -578,8 +580,8 @@ module.exports = function(webpackEnv) {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: 'module-a/static/css/[name].[contenthash:8].css',
-          chunkFilename: 'module-a/static/css/[name].[contenthash:8].chunk.css',
+          filename: `${MODULE_NAME}/static/css/[name].[contenthash:8].css`,
+          chunkFilename: `${MODULE_NAME}/static/css/[name].[contenthash:8].chunk.css`,
         }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
